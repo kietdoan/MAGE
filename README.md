@@ -132,20 +132,6 @@ bash train_sleepedf_single_scale.sh --scale-index 0 --fold -1
 
 Separate fold runs save checkpoints and logs in their own fold directories, but write to the same experiment-level `csv/summary.csv`; that summary is overwritten rather than merged across invocations. Running all five folds together writes a combined summary with a mean row.
 
-### Training outputs
-
-Under `MAGE_OUTPUT_ROOT` (default `../MAGE_private_artifacts`), the launchers use:
-
-```text
-results_seed100/
-├── multi_scale_faced/
-├── single_scale_faced/
-├── multi_scale_sleepedf/
-└── single_scale_sleepedf/
-```
-
-Additional subdirectories encode the dataset, model settings, split, and selected head. Within each fold, `ckpts/` stores checkpoints, `tb/` stores TensorBoard logs, and `csv/` stores logged metrics. Single-scale experiments include a `Head0`, `Head1`, or `Head2` directory.
-
 ## Pretraining from scratch
 
 Pretraining is optional when using the provided downstream checkpoint. Edit `IN_ROOT` and `OUT_DIR` in `preprocessing/pretrain/prepare_pretrain.sh` to select the raw TUH EEG input and processed output locations:
