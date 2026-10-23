@@ -147,23 +147,14 @@ The orchestrator reads the following processed-data locations:
 | TUAB | `TUAB_PATH` | `data/TUAB` |
 | BCIC2a | `BCIC2A_PATH` | `data/BCIC2a` |
 
-The FACED and Sleep-EDFx training shell launchers use the same respective variables and defaults. Use absolute paths for overrides.
-
-For a FACED run saved in the default output location:
+For example, to inspect a FACED multi-scale run, set `FACED_PATH` to your processed data directory and run:
 
 ```bash
+export FACED_PATH=/path/to/processed/FACED
 python scripts/run_mage_aggregator_folders.py \
   ../MAGE_private_artifacts/results_seed100/multi_scale_faced \
   --output-dir ../MAGE_private_artifacts/aggregator_eval_multi_seed/faced_mage \
   --device 0
-```
-
-For Sleep-EDFx, replace the input directory with `../MAGE_private_artifacts/results_seed100/multi_scale_sleepedf` and select a different output directory. If you changed `MAGE_OUTPUT_ROOT`, pass the corresponding input path explicitly.
-
-The expected checkpoint layout is:
-
-```text
-<results_dir>/.../<DATASET>/.../<split_dir>/foldX/ckpts/best-*.ckpt
 ```
 
 Useful options:
