@@ -1,6 +1,6 @@
 # MAGE: Towards Generalizable Multi-timescale EEG Representations
 
-This repository provides the MAGE model, EEG preprocessing pipelines, pretraining code, downstream training, and multi-scale aggregator analysis. The included downstream launchers provide examples for FACED and Sleep-EDFx using the pretrained checkpoint `ckpts/mage.ckpt`.
+This repository provides the MAGE model, EEG preprocessing pipelines, pretraining code, downstream training, and multi-scale aggregator analysis.
 
 ## Installation
 
