@@ -38,37 +38,18 @@ This variable controls training outputs. Aggregator evaluation output paths are 
 
 ## Prepare the data
 
-Obtain the raw datasets from their providers. For launchers under `preprocessing/downstream/`, edit the input/output placeholders before running them. Use the processed output directory as the corresponding training or evaluation data path.
+Obtain the raw dataset from its provider, then use the corresponding preparation script under `preprocessing/downstream/`. Configure the input and output paths as indicated in that script and run it from the repository root. Use the resulting processed-data directory for downstream training and evaluation.
 
-### FACED
+### Example: FACED
 
-In `preprocessing/downstream/prepare_faced.sh`, set `ROOT_DIR` to the directory of subject `.pkl` files and `OUT_DB` to the output LMDB directory. Then run:
+In `preprocessing/downstream/prepare_faced.sh`, set `ROOT_DIR` to the directory containing the subject `.pkl` files and `OUT_DB` to your desired output LMDB directory. Then run:
 
 ```bash
 bash preprocessing/downstream/prepare_faced.sh
 export FACED_PATH=/path/to/processed/FACED
 ```
 
-### Sleep-EDFx
-
-The Sleep-EDFx preparation script uses Braindecode's `SleepPhysionet` loader and writes preprocessed `.pt` windows into class subdirectories. Set the destination before running it; the same variable is used by the training launchers:
-
-```bash
-export SLEEPEDF_PATH=/path/to/processed/SLEEPEDF
-bash preprocessing/downstream/prepare_sleepedf.sh
-```
-
-### Other datasets
-
-Preparation launchers are also provided as `prepare_physiomi.sh`, `prepare_shumi.sh`, `prepare_kaggle_ern.sh`, `prepare_tuab.sh`, and `prepare_bcic2a.sh` under `preprocessing/downstream/`. Edit their paths and invoke them from the repository root.
-
-The unified downstream entry point supports these datasets, but dedicated training shell examples are currently provided only for FACED and Sleep-EDFx. Inspect its options with:
-
-```bash
-python downstream/run_downstream_full.py --help
-```
-
-Pass dataset paths explicitly when invoking this Python entry point, for example `--physiomi_path /path/to/processed/PhysioMI`. It does not read the dataset environment variables used by the shell launchers and aggregator orchestrator.
+Set `FACED_PATH` to the same directory as `OUT_DB` so the FACED training launchers can locate the processed data. Follow the corresponding preparation script's instructions for other datasets.
 
 ## Downstream training examples
 
