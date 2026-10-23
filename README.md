@@ -187,10 +187,6 @@ The expected checkpoint layout is:
 <results_dir>/.../<DATASET>/.../<split_dir>/foldX/ckpts/best-*.ckpt
 ```
 
-The tool prefers one `best-*.ckpt` per fold and falls back to `last.ckpt`; multiple best checkpoints in one fold cause an error. It recognizes split directories `4fold` for FACED/TUAB, `5fold` for SLEEPEDF/SHUMI/KaggleERN, `K5fold_SUBJ_fixT4` for PhysioMI, and `LOSO` for BCIC2a. Fold names `valFoldX` and `sX_*` are also recognized.
-
-Pass multiple result directories to pool experiments. Seeds are inferred from a `results_seed<N>` ancestor, defaulting to 100. The orchestrator passes that inferred value as both `--seed` and `--val_seed` to the exporter; check this against your training configuration when matching validation splits.
-
 Useful options:
 
 - `--dry-run`: list discovered folds and checkpoints without inference.
