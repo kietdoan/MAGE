@@ -131,8 +131,6 @@ export DATA_ROOT=/path/to/preprocessed/pretrain
 )
 ```
 
-The pretraining example uses 50 epochs, 19 channels, and patch sizes 50, 100, and 200. Its outputs go to the `pretrain/` subdirectory of `MAGE_OUTPUT_ROOT`, or `../MAGE_private_artifacts/pretrain/` relative to the repository root by default. Pretraining and downstream launchers have independent settings.
-
 ## Inspect multi-scale aggregator weights
 
 After downstream training, `scripts/run_mage_aggregator_folders.py` discovers fold checkpoints, runs the test-set exporter, and combines per-sample weights, metrics, plots, and fold/seed statistics. Use multi-scale result folders with this tool.
