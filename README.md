@@ -156,12 +156,3 @@ python scripts/run_mage_aggregator_folders.py \
   --output-dir ../MAGE_private_artifacts/aggregator_eval_multi_seed/faced_mage \
   --device 0
 ```
-
-Useful options:
-
-- `--dry-run`: list discovered folds and checkpoints without inference.
-- `--skip-existing`: reuse existing raw sample CSVs and rerun aggregation.
-- `--batch-size` and `--num-workers`: adjust inference resources.
-- `--output-dir`: choose the analysis destination; the default is `../MAGE_private_artifacts/aggregator_eval_selected`.
-
-`downstream/test_mage_multi_scale_visualize.py` is the per-checkpoint exporter. `scripts/run_shared_encoder_scale_weights_folders.py` supplies aggregation helpers, and `scripts/aggregate_mage_scale_weights.py` produces dataset-level summaries.
