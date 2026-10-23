@@ -6,16 +6,43 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --time=24:00:00
 
-# Usage: sbatch train_sleepedf_single_scale.sh <scale_index 0|1|2> <fold 0..4>
-mkdir -p ../MAGE_private_artifacts/logs
 # Activate the mage environment before running or submitting this script.
+usage() {
+    echo "Usage: bash train_sleepedf_single_scale.sh --scale-index <0|1|2> --fold <-1|0|1|2|3|4>"
+    echo "  --fold -1 runs all five folds sequentially."
+}
 
+FOLD=""
+SCALE_INDEX=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --fold)
+            [[ $# -ge 2 ]] || { echo "Missing value for --fold" >&2; exit 2; }
+            FOLD="$2"
+            shift 2
+            ;;
+        --scale-index)
+            [[ $# -ge 2 ]] || { echo "Missing value for --scale-index" >&2; exit 2; }
+            SCALE_INDEX="$2"
+            shift 2
+            ;;
+        -h|--help) usage; exit 0 ;;
+        *) echo "Unknown argument: $1" >&2; usage >&2; exit 2 ;;
+    esac
+done
+case "$FOLD" in
+    -1|0|1|2|3|4) ;;
+    *) echo "--fold is required and must be -1 or 0..4" >&2; exit 2 ;;
+esac
+case "$SCALE_INDEX" in
+    0|1|2) ;;
+    *) echo "--scale-index is required and must be 0, 1, or 2" >&2; exit 2 ;;
+esac
+
+mkdir -p ../MAGE_private_artifacts/logs
 unset SLURM_MEM_PER_CPU
 unset SLURM_MEM_PER_GPU
 unset SLURM_MEM_PER_NODE
-
-SCALE_INDEX=${1:?"usage: sbatch train_sleepedf_single_scale.sh <scale_index 0|1|2> <fold 0..4>"}
-FOLD=${2:?"usage: sbatch train_sleepedf_single_scale.sh <scale_index 0|1|2> <fold 0..4>"}
 
 echo "=== GPU Check ==="
 nvidia-smi

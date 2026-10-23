@@ -80,10 +80,10 @@ All root-level training launchers load `ckpts/mage.ckpt`, freeze the encoder, an
 | `train_multi_scale_single_scale_faced_index0.sh` | FACED scale 0 | All 4 sequentially | None |
 | `train_multi_scale_single_scale_faced_index1.sh` | FACED scale 1 | All 4 sequentially | None |
 | `train_multi_scale_single_scale_faced_index2.sh` | FACED scale 2 | All 4 sequentially | None |
-| `train_sleepedf_multi_scale.sh` | Sleep-EDFx multi-scale | One selected fold, or all 5 with `-1` | `<fold>` |
-| `train_sleepedf_single_scale.sh` | Sleep-EDFx single-scale | One selected fold, or all 5 with `-1` | `<scale_index> <fold>` |
+| `train_sleepedf_multi_scale.sh` | Sleep-EDFx multi-scale | One selected fold, or all 5 with `-1` | `--fold <fold>` |
+| `train_sleepedf_single_scale.sh` | Sleep-EDFx single-scale | One selected fold, or all 5 with `-1` | `--scale-index <index> --fold <fold>` |
 
-The launchers provide example configurations that you can adapt to your experiment. Training and validation-split seeds are configured separately through `--seed` and `--val_seed`. The Sleep-EDFx multi-scale and single-scale examples also use different dropout and weight-decay settings; inspect and align them if conducting a comparison that varies only scale selection.
+The launchers provide example configurations that you can adapt to your experiment.
 
 ### Run directly on a GPU machine
 
@@ -94,10 +94,10 @@ With `mage` activated and the dataset paths configured:
 bash train_faced_multi_scale.sh
 
 # Sleep-EDFx: train only fold 0 using the multi-scale model.
-bash train_sleepedf_multi_scale.sh 0
+bash train_sleepedf_multi_scale.sh --fold 0
 
 # Sleep-EDFx: train only fold 0 using scale 0.
-bash train_sleepedf_single_scale.sh 0 0
+bash train_sleepedf_single_scale.sh --scale-index 0 --fold 0
 ```
 
 The `#SBATCH` directives are ignored when a launcher is run with `bash`.
@@ -117,7 +117,7 @@ For five separate Sleep-EDFx multi-scale jobs:
 
 ```bash
 for fold in {0..4}; do
-  sbatch --partition=YOUR_PARTITION train_sleepedf_multi_scale.sh "$fold"
+  sbatch --partition=YOUR_PARTITION train_sleepedf_multi_scale.sh --fold "$fold"
 done
 ```
 
@@ -125,18 +125,18 @@ For five separate jobs using single scale 0:
 
 ```bash
 for fold in {0..4}; do
-  sbatch --partition=YOUR_PARTITION train_sleepedf_single_scale.sh 0 "$fold"
+  sbatch --partition=YOUR_PARTITION train_sleepedf_single_scale.sh --scale-index 0 --fold "$fold"
 done
 ```
 
-Repeat the second loop with scale indices 1 and 2 to evaluate all three single scales: **15 jobs total**.
+Repeat the second loop with `--scale-index 1` and `--scale-index 2` to evaluate all three single scales: **15 jobs total**.
 
 Alternatively, the current Python runner accepts fold `-1` to run all five folds sequentially in one invocation:
 
 ```bash
-bash train_sleepedf_multi_scale.sh -1
+bash train_sleepedf_multi_scale.sh --fold -1
 # Or all five folds for single scale 0:
-bash train_sleepedf_single_scale.sh 0 -1
+bash train_sleepedf_single_scale.sh --scale-index 0 --fold -1
 ```
 
 Allow enough runtime if submitting an all-fold invocation to Slurm. Separate fold runs save checkpoints and logs in their own fold directories, but write to the same experiment-level `csv/summary.csv`; that summary is overwritten rather than merged across invocations. Running all five folds together writes a combined summary with a mean row.
