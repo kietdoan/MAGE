@@ -34,7 +34,7 @@ Datasets and downstream run results are not included. Training launchers save ge
 export MAGE_OUTPUT_ROOT=/path/to/experiment_outputs
 ```
 
-This variable controls training outputs. Slurm log paths and aggregator evaluation output paths are configured separately. `.gitignore` excludes common local datasets, logs, and generated checkpoints while retaining `ckpts/mage.ckpt`.
+This variable controls training outputs. Aggregator evaluation output paths are configured separately. `.gitignore` excludes common local datasets, logs, and generated checkpoints while retaining `ckpts/mage.ckpt`.
 
 ## Prepare the data
 
@@ -102,34 +102,25 @@ bash train_sleepedf_single_scale.sh --scale-index 0 --fold 0
 
 The `#SBATCH` directives are ignored when a launcher is run with `bash`.
 
-### Run on a Slurm cluster
+### Run all five Sleep-EDFx folds
 
-Activate `mage` before submission. Create the log directory before calling `sbatch`, because Slurm opens log files before executing the script:
-
-```bash
-mkdir -p ../MAGE_private_artifacts/logs
-sbatch --partition=YOUR_PARTITION train_faced_multi_scale.sh
-```
-
-Replace `YOUR_PARTITION` with your cluster's GPU partition, or omit the option if a suitable default is configured. The launchers request one GPU, 10 CPUs, and 24 hours; adjust these directives for your cluster. Override `--output` and `--error` when submitting if you want a different Slurm log location.
-
-For five separate Sleep-EDFx multi-scale jobs:
+To run the five Sleep-EDFx multi-scale folds sequentially:
 
 ```bash
 for fold in {0..4}; do
-  sbatch --partition=YOUR_PARTITION train_sleepedf_multi_scale.sh --fold "$fold"
+  bash train_sleepedf_multi_scale.sh --fold "$fold"
 done
 ```
 
-For five separate jobs using single scale 0:
+For the five folds using single scale 0:
 
 ```bash
 for fold in {0..4}; do
-  sbatch --partition=YOUR_PARTITION train_sleepedf_single_scale.sh --scale-index 0 --fold "$fold"
+  bash train_sleepedf_single_scale.sh --scale-index 0 --fold "$fold"
 done
 ```
 
-Repeat the second loop with `--scale-index 1` and `--scale-index 2` to evaluate all three single scales: **15 jobs total**.
+Repeat the second loop with `--scale-index 1` and `--scale-index 2` to evaluate all three single scales: **15 fold runs total**.
 
 Alternatively, the current Python runner accepts fold `-1` to run all five folds sequentially in one invocation:
 
@@ -139,7 +130,7 @@ bash train_sleepedf_multi_scale.sh --fold -1
 bash train_sleepedf_single_scale.sh --scale-index 0 --fold -1
 ```
 
-Allow enough runtime if submitting an all-fold invocation to Slurm. Separate fold runs save checkpoints and logs in their own fold directories, but write to the same experiment-level `csv/summary.csv`; that summary is overwritten rather than merged across invocations. Running all five folds together writes a combined summary with a mean row.
+Separate fold runs save checkpoints and logs in their own fold directories, but write to the same experiment-level `csv/summary.csv`; that summary is overwritten rather than merged across invocations. Running all five folds together writes a combined summary with a mean row.
 
 ### Training outputs
 
